@@ -7,22 +7,13 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 import numpy as np
 from funciones import *
-external_stylesheets=[dbc.themes.BOOTSTRAP]
 
-#app = Dash(__name__, external_stylesheets=external_stylesheets)
-app = Dash(__name__)
-
+app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 df = pd.read_csv("iris.csv")
  
 
-
-
-
-app.layout = html.Div(children=[
-    html.H1(children='Analisis explotario de datos'),
-
+descripcion_datos = html.Div([
     html.H2("Paso 1: Descripción de la estructura de los datos"),
-    
     html.H3("1) Forma (dimensiones) del DataFrame"),
     html.P(str(df.shape)),
     html.H3("2) Tipos de datos (variables)"),
@@ -30,12 +21,17 @@ app.layout = html.Div(children=[
     #dash_table.DataTable(df.dtypes.to_frame().T.to_dict('records'), 
     #[{"name": i, "id": i} for i in df.columns]),
 
+])
+
+datos_faltantes = html.Div([
     html.H2("Paso 2: Identificación de datos faltantes"),
     ## Aqui deberia de haber uuna tabla con los valores faltante
     dash_table.DataTable(df.isnull().sum().to_frame().T.to_dict('records'), 
     [{"name": i, "id": i} for i in df.columns]),
+])
 
 
+valores_atipicos =html.Div([
     html.H2("Paso 3: Detección de valores atípicos"),
     html.H3("Histograma de valores"),
     html.Div([
@@ -68,6 +64,14 @@ app.layout = html.Div(children=[
         ),
         dcc.Graph(id='boxplot-graph')
     ]),
+
+])
+
+app.layout = dbc.Container(children=[
+    html.H1(children='Analisis explotario de datos'),
+    descripcion_datos,
+    datos_faltantes,
+    valores_atipicos,
 
     html.H2("Paso 4: Identificación de relaciones entre pares variables"),
     html.H3("Matriz de correlación"),

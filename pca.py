@@ -41,6 +41,8 @@ Varianza = pca.explained_variance_ratio_
 df_eigenvalores = pd.DataFrame(Varianza, index=NuevaMatriz.columns).T
 df_eigenvalores
 print(type(df_eigenvectores), str(df_eigenvectores.shape))
+print(np.cumsum(pca.explained_variance_ratio_))
+
 ###########################################
 matriz_correlacion = html.Div(children=[
     html.H2("Matriz de Correlacion"),
@@ -60,16 +62,36 @@ eigenvalores = html.Div(children=[
     
 ])
 
+varianza_acumulada = html.Div(children=[
+    html.H2("Varianza acumulada"),
+    dcc.Slider(
+        0,
+        len(Varianza),
+        step=None,
+        value=0,
+        marks={str(year): str(year) for year in range(len(Varianza)+1)},
+        id='varianza-slider'
+    ),
+    dcc.Graph(id='grafica-varianza')
+])
+
 
 
 app.layout = html.Div(children=[
     html.H1("Analisis de Componentes Principales PCA"),
     matriz_correlacion,
     eigenvectores,
-    eigenvalores
+    eigenvalores,
+    varianza_acumulada
     
 
 ])
+
+
+@app.callback(Output('grafica-varianza', 'figure'), Input('varianza-slider', 'value'))
+def varianza_update(valor):
+    print(np.cumsum(pca.explained_variance_ratio_)[0:valor])
+    return px.line(np.cumsum(pca.explained_variance_ratio_)[0:valor], markers=True)
 
 if __name__ == '__main__':
     app.run_server(debug=True)
