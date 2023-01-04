@@ -8,9 +8,14 @@ app = dash.Dash(
             ]
 )
 
-app.layout = dbc.Container(children=[
-    html.H1('Hola Bootstrap', className='text-center')
-])
+app.layout = html.Div([dbc.Container(children=[
+        html.Div([
+            html.H1('Hola Bootstrap', className='text-center', style={"color":"white"})
+        ], style={"background-color": "blue" }, className='rounded'),
+
+        html.P("""Hola a todos sksdfklsdfdfdfldsA As dfdfdfd\n SDsdsds Asasdsdf Perefeddffdgbhnhf""")
+    ])
+], style={'background-color':'gray'})
 
 if __name__ == "__main__":
     app.run_server(debug=True)

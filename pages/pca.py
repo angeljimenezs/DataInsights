@@ -1,4 +1,5 @@
-from dash import Dash, html, dcc, Input, Output, dash_table
+import dash
+from dash import callback, html, dcc, Input, Output, dash_table
 import plotly.express as px
 import dash_bootstrap_components as dbc
 import pandas as pd
@@ -6,22 +7,10 @@ import numpy as np
 from funciones import *
 
 
-app = Dash(__name__)
+#app = Dash(__name__)
+dash.register_page(__name__, name='Analisis de Componentes Principales PCA', order=1)
 
-df = pd.read_csv("iris.csv")
-
-
-def generate_table(dataframe, max_rows=10):
-    return html.Table([
-        html.Thead(
-            html.Tr([html.Th(col) for col in dataframe.columns])
-        ),
-        html.Tbody([
-            html.Tr([
-                html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-            ]) for i in range(min(len(dataframe), max_rows))
-        ])
-    ])
+df = pd.read_csv("../iris.csv")
 
 
 #########################################
@@ -77,7 +66,7 @@ varianza_acumulada = html.Div(children=[
 
 
 
-app.layout = html.Div(children=[
+layout = html.Div(children=[
     html.H1("Analisis de Componentes Principales PCA"),
     matriz_correlacion,
     eigenvectores,
@@ -88,10 +77,7 @@ app.layout = html.Div(children=[
 ])
 
 
-@app.callback(Output('grafica-varianza', 'figure'), Input('varianza-slider', 'value'))
+@callback(Output('grafica-varianza', 'figure'), Input('varianza-slider', 'value'))
 def varianza_update(valor):
     print(np.cumsum(pca.explained_variance_ratio_)[0:valor])
     return px.line(np.cumsum(pca.explained_variance_ratio_)[0:valor], markers=True)
-
-if __name__ == '__main__':
-    app.run_server(debug=True)

@@ -1,18 +1,21 @@
-from dash import Dash, html, dcc, Input, Output, State
+import dash
+from dash import callback, html, dcc, Input, Output, State
 import plotly.express as px
 import dash_bootstrap_components as dbc
 import pandas as pd
 import numpy as np
+from funciones import generate_table
 
 from sklearn import model_selection
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.tree import export_text
 
-app = Dash(__name__)
-df = pd.read_csv("iris.csv")
+#app = Dash(__name__)
+dash.register_page(__name__, name='Arbol de decision pronostico', order=2)
+df = pd.read_csv("../iris.csv")
 
-#---------------------------1001173946--------------------------
+#---------------------------Data cleaning--------------------------
 columnasObj = df.select_dtypes(include=['object']).columns
 columnasObj
 
@@ -20,17 +23,9 @@ MDatos = df.drop(columns = columnasObj)
 MDatos = MDatos.dropna()
 
 # --------------------------------------------------------
-def generate_table(dataframe, max_rows=10):
-    return html.Table([
-        html.Thead(
-            html.Tr([html.Th(col) for col in dataframe.columns])
-        ),
-        html.Tbody([
-            html.Tr([
-                html.Td(str(dataframe.iloc[i][col])) for col in dataframe.columns
-            ]) for i in range(min(len(dataframe), max_rows))
-        ])
-    ])
+
+
+
 
 informacion_datos = html.Div(children=[
     html.H2("Tipos de datos"),
@@ -47,7 +42,7 @@ seleccion = html.Div(children=[
     html.H2("Seleccion de varible a predecir X"),
     dcc.Checklist(MDatos.columns, []),
     dcc.RadioItems(MDatos.columns, id='var-selector'),
-    html.Button(id='submit-button-state', n_clicks=0, children='Submit'),
+    html.Button(id='submit-button-state', n_clicks=0, children='Submit', className='btn-primary'),
     html.Div(),
     dcc.Textarea(id='texto', readOnly=True, style={'width': '100%', 'height': 200}),
     dcc.Clipboard(
@@ -55,14 +50,14 @@ seleccion = html.Div(children=[
 ])
 
 
-app.layout = html.Div(children=[
+layout = html.Div(children=[
     html.H1(children='Arbol de decisión (Pronostico)'),
     informacion_datos,
     descripcion_datos,
     seleccion,
 ])
 
-@app.callback(
+@callback(
     Output('texto','value'),
     Input('submit-button-state','n_clicks'),
     State('var-selector', 'value'))
@@ -83,6 +78,3 @@ def update_output(n_clicks, valor):
         Reporte = export_text(PronosticoAD, feature_names = colX)
         return Reporte
         #return "Hola {} y {}".format(valor, colX)
-
-if __name__ == '__main__':
-    app.run_server(debug=True)

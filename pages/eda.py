@@ -1,15 +1,14 @@
-# Run this app with `python app.py` and
-# visit http://127.0.0.1:8050/ in your web browser.
-
-from dash import Dash, html, dcc, Input, Output, dash_table
+import dash
+from dash import callback, html, dcc, Input, Output, dash_table
 import plotly.express as px
 import dash_bootstrap_components as dbc
 import pandas as pd
 import numpy as np
 from funciones import *
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
-df = pd.read_csv("iris.csv")
+#app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+dash.register_page(__name__, path='/', order=0)
+df = pd.read_csv("../iris.csv")
  
 
 descripcion_datos = html.Div([
@@ -26,8 +25,7 @@ descripcion_datos = html.Div([
 datos_faltantes = html.Div([
     html.H2("Paso 2: Identificación de datos faltantes"),
     ## Aqui deberia de haber uuna tabla con los valores faltante
-    dash_table.DataTable(df.isnull().sum().to_frame().T.to_dict('records'), 
-    [{"name": i, "id": i} for i in df.columns]),
+    generate_table(df.isnull().sum().to_frame().T),
 ])
 
 
@@ -46,9 +44,8 @@ valores_atipicos =html.Div([
 
     html.H3("Resumen estadístico de variables numéricas"),
     #Aqui va una tabla de los valores
-    dash_table.DataTable(df.describe().reset_index().to_dict('records'), 
-    [{"name": i, "id": i} for i in df.describe().reset_index().columns]),        
- 
+    generate_table(df.describe().reset_index()),
+
     html.H3("Diagramas de caja para detectar posibles valores atípicos"),
     # Diagrama de caja
     html.Div([
@@ -67,7 +64,7 @@ valores_atipicos =html.Div([
 
 ])
 
-app.layout = dbc.Container(children=[
+layout = dbc.Container(children=[
     html.H1(children='Analisis explotario de datos'),
     descripcion_datos,
     datos_faltantes,
@@ -80,21 +77,16 @@ app.layout = dbc.Container(children=[
 ])
 
 
-@app.callback(
+@callback(
     Output('boxplot-graph', 'figure'),
     Input('boxplot-column-x', 'value'))
 def actualizar_boxplot(boxplot_column_x):
     fig = px.box(df, y = boxplot_column_x)
     return fig
 
-@app.callback(
+@callback(
     Output('histogram-graph', 'figure'),
     Input('histogram-column', 'value'))
 def actualizar_histograma(histogram_column):
     fig = px.histogram(df[[histogram_column]])
     return fig
-
-
-
-if __name__ == '__main__':
-    app.run_server(debug=True)
