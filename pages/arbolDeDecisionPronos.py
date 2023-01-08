@@ -21,6 +21,7 @@ columnasObj
 
 MDatos = df.drop(columns = columnasObj)
 MDatos = MDatos.dropna()
+PronosticoAD = DecisionTreeRegressor(max_depth=3, random_state=0)
 
 # --------------------------------------------------------
 
@@ -40,29 +41,52 @@ descripcion_datos = html.Div(children=[
 
 seleccion = html.Div(children=[
     html.H2("Seleccion de varible a predecir X"),
-    dcc.Checklist(MDatos.columns, []),
     dcc.RadioItems(MDatos.columns, id='var-selector'),
     html.Button(id='submit-button-state', n_clicks=0, children='Submit', className='btn-primary'),
     html.Div(),
     dcc.Textarea(id='texto', readOnly=True, style={'width': '100%', 'height': 200}),
-    dcc.Clipboard(
-        target_id="texto")
+    dcc.Clipboard(target_id="texto"),
+
+   
+
 ])
+
+predictor_element = html.Div(children=[
+    html.H4('Prediccion'),
+    html.Div(id="resultado-pred"),
+
+    html.Div([
+                dcc.Input(
+                    id="input_{}".format(_),
+                    type="number",
+                    placeholder="Inserte valor {}".format(_),
+                    ) for _ in range(len(MDatos.columns)-1)
+            ], id='predictor-div'),
+    html.Button(id='boton-predictor', n_clicks=0, children='Predecir', className='btn-primary'),
+], id="predictor-div", hidden=False)
 
 
 layout = html.Div(children=[
+    dcc.Store(id='memory'),
+
     html.H1(children='Arbol de decisión (Pronostico)'),
     informacion_datos,
     descripcion_datos,
     seleccion,
+    predictor_element
 ])
+
 
 @callback(
     Output('texto','value'),
+    Output('predictor-div', 'hidden'),
     Input('submit-button-state','n_clicks'),
-    State('var-selector', 'value'))
+    State('var-selector', 'value')
+    )
 def update_output(n_clicks, valor):
+
     if valor and n_clicks:
+        # Haciendo visible Div y Desabilitando al valor seleccionado
 
         # Aplicacion del algoritmo
         colX = MDatos.columns.to_list()
@@ -73,8 +97,42 @@ def update_output(n_clicks, valor):
                                                                     test_size = 0.2, 
                                                                     random_state = 0, 
                                                                     shuffle = True)
-        PronosticoAD = DecisionTreeRegressor(max_depth=3, random_state=0)
         PronosticoAD.fit(X_train, Y_train)
-        Reporte = export_text(PronosticoAD, feature_names = colX)
-        return Reporte
-        #return "Hola {} y {}".format(valor, colX)
+        Reporte = export_text(PronosticoAD, feature_names = colX),
+        
+        print(type(Reporte))
+        
+        return Reporte[0], False
+    return dash.no_update, dash.no_update
+
+
+@callback(
+    Output('resultado-pred', 'children'),
+    Input('boton-predictor', 'n_clicks'),
+    State('var-selector', 'value'),
+    [State('input_{}'.format(_), 'value') for _ in range(len(MDatos.columns)-1)])
+def prediccion(n_clicks,  *children):
+    if n_clicks:
+        print(children)
+        print(PronosticoAD)
+        if None in children[1:]:
+            return "Valores mal insertados"
+        return PronosticoAD.predict([children[1:]])
+    return ""
+
+'''
+def prediccion(n_clicks,  *children):
+    if n_clicks:
+        lista_a = MDatos.columns.to_list().copy()#
+        lista_b = list(children)
+        lista_b.pop(0)
+        indiceDe = lista_a.index(children[0])
+        lista_b.pop(indiceDe)
+        print(type(children))
+        print(children)
+        print(lista_b)
+        if None in lista_b:
+            return "Valores mal insertados"
+        return PronosticoAD.predict([lista_b])
+    return ""
+'''

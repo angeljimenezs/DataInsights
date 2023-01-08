@@ -15,17 +15,14 @@ SIDEBAR_STYLE = {
     "bottom": 0,
     "width": "16rem",
     "padding": "2rem 1rem",
-    "background-color": "#f8f9fa",
+    "background-color": "#000000",
 }
 
 
 # Barra lateral
 sidebar =html.Div(
     [
-        html.Div([
-            html.Div([html.Img(src='assets/data.svg', alt='imagen', style={'height':'10%', 'width':'10%', "fill": 'red'})], ),
-            html.H2("DataInsights"),
-        ]),
+        html.H2("DataInsights", style={'color': 'black'}),
         html.Hr(),
         dbc.Nav(
                 [
@@ -43,8 +40,10 @@ sidebar =html.Div(
                 
         )
 
-    ], 
-    style=SIDEBAR_STYLE,
+    ],
+    #className='position-fixed'
+    #style={'position':'fixed'} 
+    #style=SIDEBAR_STYLE,
 )
 
 # Layout para todas las paginas
@@ -54,15 +53,23 @@ app.layout = dbc.Container([
             dbc.Col(
                 [
                     sidebar
-                ], xs=4, sm=4, md=4, lg=2, xl=2, xxl=2),
+                ],
+                #xs=4, sm=4, md=4, lg=2, xl=2, xxl=2
+                #class_name='col-3 px-1 bg-dark position-fixed" id="sticky-sidebar', 
+                class_name='col-3 sticky-sidebar',
+                style={'position':'sticky'}
+                ),
 
             dbc.Col(
                 [
                     dash.page_container
-                ], xs=8, sm=8, md=8, lg=10, xl=10, xxl=10)
+                ],
+                #xs=8, sm=8, md=8, lg=10, xl=10, xxl=10
+                class_name='col-9'
+                )
         ]
     )
-], fluid=False)
+], fluid=True)
 
 
 if __name__ == "__main__":
