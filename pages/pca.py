@@ -4,6 +4,8 @@ import plotly.express as px
 import dash_bootstrap_components as dbc
 import pandas as pd
 import numpy as np
+import plotly.graph_objects as go
+
 from funciones import *
 
 
@@ -32,6 +34,9 @@ df_eigenvalores
 print(type(df_eigenvectores), str(df_eigenvectores.shape))
 print(np.cumsum(pca.explained_variance_ratio_))
 
+
+## Funciones
+
 ###########################################
 matriz_correlacion = html.Div(children=[
     html.H2("Matriz de Correlacion"),
@@ -53,15 +58,14 @@ eigenvalores = html.Div(children=[
 
 varianza_acumulada = html.Div(children=[
     html.H2("Varianza acumulada"),
-    dcc.Slider(
-        0,
-        len(Varianza),
-        step=None,
-        value=0,
-        marks={str(year): str(year) for year in range(len(Varianza)+1)},
-        id='varianza-slider'
-    ),
-    dcc.Graph(id='grafica-varianza')
+    dcc.Graph(figure=graficar_varianza(Varianza, np.cumsum(pca.explained_variance_ratio_))),
+    dcc.Slider(0,len(Varianza), step=1,
+            value=0,
+            marks={str(num): str(num) for num in range(len(Varianza)+1)},
+            id='varianza-slider'),
+    html.Div(id='slider-output', children=[]),
+
+    
 ])
 
 
@@ -71,13 +75,16 @@ layout = html.Div(children=[
     matriz_correlacion,
     eigenvectores,
     eigenvalores,
-    varianza_acumulada
+    varianza_acumulada,
     
 
 ])
 
 
-@callback(Output('grafica-varianza', 'figure'), Input('varianza-slider', 'value'))
-def varianza_update(valor):
-    print(np.cumsum(pca.explained_variance_ratio_)[0:valor])
-    return px.line(np.cumsum(pca.explained_variance_ratio_)[0:valor], markers=True)
+@callback(
+    Output('slider-output', 'children'), 
+    Input('varianza-slider', 'value')
+    )
+def update_variables(valor):
+    return "Componente: {}".format(NuevaMatriz.columns.to_list()[:valor])
+    

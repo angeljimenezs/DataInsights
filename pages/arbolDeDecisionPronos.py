@@ -51,19 +51,21 @@ seleccion = html.Div(children=[
 
 ])
 
-predictor_element = html.Div(children=[
-    html.H4('Prediccion'),
-    html.Div(id="resultado-pred"),
-
-    html.Div([
-                dcc.Input(
-                    id="input_{}".format(_),
-                    type="number",
-                    placeholder="Inserte valor {}".format(_),
-                    ) for _ in range(len(MDatos.columns)-1)
-            ], id='predictor-div'),
-    html.Button(id='boton-predictor', n_clicks=0, children='Predecir', className='btn-primary'),
-], id="predictor-div", hidden=False)
+predictor_element = html.Div(
+    html.Div(children=
+    [
+        html.H4('Prediccion'),
+        html.Div(id="resultado-pred"),
+        html.Div([
+                    dcc.Input(
+                        id="input_{}".format(_),
+                        type="number",
+                        placeholder="Inserte valor {}".format(_),
+                        ) for _ in range(len(MDatos.columns)-1)
+                ], id='predictor-div'),
+        html.Button(id='boton-predictor', n_clicks=0, children='Predecir', className='btn-primary')
+    ] 
+), id='armani', hidden=True)
 
 
 layout = html.Div(children=[
@@ -79,7 +81,7 @@ layout = html.Div(children=[
 
 @callback(
     Output('texto','value'),
-    Output('predictor-div', 'hidden'),
+    Output('armani', 'hidden'),
     Input('submit-button-state','n_clicks'),
     State('var-selector', 'value')
     )
