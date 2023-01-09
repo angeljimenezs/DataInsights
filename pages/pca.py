@@ -42,7 +42,7 @@ matriz_correlacion = html.Div(children=[
     html.H2("Matriz de Correlacion"),
     dcc.Graph(figure = hacer_matriz_correlacion(df))
 
-])
+], className='bg-succes')
 
 eigenvectores = html.Div(children=[
     html.H2("Eigenvectores"),

@@ -12,7 +12,7 @@ df = pd.read_csv("../iris.csv")
  
 
 descripcion_datos = html.Div([
-    html.H2("Paso 1: Descripción de la estructura de los datos"),
+    html.H2("Paso 1: Descripción de la estructura de los datos", className='bg-success rounded'),
     html.H3("1) Forma (dimensiones) del DataFrame"),
     html.P(str(df.shape)),
     html.H3("2) Tipos de datos (variables)"),
