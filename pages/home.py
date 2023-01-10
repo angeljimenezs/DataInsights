@@ -49,14 +49,14 @@ upload_element = dcc.Upload(
 layout = html.Div([
     html.H1('¡Bienvenido a DataInsights!', className='display-4'),
     html.P('DataInsights le permite poder analizar sus propios datos a tráves 5 distintos algoritmos.'),
-    html.H5('¡Empezemos! Por favor suba un archivo en formato csv.', className='text-center'),
+    html.H5('¡Empezemos! Por favor suba un archivo en formato .csv o .xls', className='text-center'),
     upload_element,
     html.Div(id='output-datatable'),
     html.Div(id='uploading-output')
 ])
 
 @callback(
-    Output('datitos', 'data'),
+    Output('main-data', 'data'),
     Input('upload-data', 'contents'),
     State('upload-data', 'filename'),
 )
@@ -68,10 +68,8 @@ def store_data(list_of_contents, list_of_names):
 
 @callback(
     Output('uploading-output', 'children'),
-    Input('datitos', 'data'),
+    Input('main-data', 'data'),
     State('upload-data', 'filename'),
-    #State('upload-data', 'last_modified'),
-    #prevent_initial_call=True
 )
 def update_uploading_output(data, filename):
     print(type(data))
@@ -81,19 +79,3 @@ def update_uploading_output(data, filename):
             dbc.Alert("¡Archivo subido!", color="success"),
             html.H5(filename)])
     
-
-
-
-
-
-"""
-callback(
-    Output('output-datatable', 'children'),
-    Input('upload-data', 'contents'),
-    State('upload-data', 'filename'),
-    State('upload-data', 'last_modified'))
-def update_output(list_of_contents, list_of_names, list_of_dates):
-    if list_of_contents is not None:
-        children = [ parse_contents(list_of_contents, list_of_names, list_of_dates)]
-        return children
-"""

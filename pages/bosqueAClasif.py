@@ -19,7 +19,7 @@ layout = dbc.Container(children=[], id='bac-layout')
 
 @callback(
     Output('bac-layout', 'children'),
-    Input('datitos', 'data')
+    Input('main-data', 'data')
 )
 def comprobar_data(data):
     if data:
@@ -51,7 +51,7 @@ def informacion_datos(df):
 
 def descripcion_datos(df):
     return html.Div(children=[
-        html.H2("Descripcion de los datos"),
+        html.H2("Descripción de los datos"),
         generate_table(df.describe().reset_index())
     ])
 
@@ -61,7 +61,7 @@ def seleccion(MDatos):
     columnasOpcion = [columna for columna in MDatos if MDatos[columna].unique().size < 10] 
 
     return html.Div(children=[
-        html.H2("Seleccion de varible a predecir X"),
+        html.H2("Selección de varible a predecir X"),
         dcc.RadioItems(columnasOpcion, id='var-selector-2'),
         html.Button(id='submit-button-state-2', n_clicks=0, children='Entrenar', className='btn btn-info'),
         html.Div(),
@@ -100,7 +100,7 @@ def predictor_element(MDatos):
     Output('armani-2', 'hidden'),
     Input('submit-button-state-2','n_clicks'),
     State('var-selector-2', 'value'),
-    State('datitos', 'data')
+    State('main-data', 'data')
     )
 def update_output(n_clicks, variable, data):
     
@@ -136,7 +136,7 @@ def update_output(n_clicks, variable, data):
     Output('resultado-pred-2', 'children'),
     Input('boton-predictor-2', 'n_clicks'),
     State('var-selector-2', 'value'),
-    State('datitos', 'data'),
+    State('main-data', 'data'),
     State({'type': 'dynamic-input-2', 'index': ALL}, 'value')
 )
 def prediccion(n_clicks, selection, data, values):

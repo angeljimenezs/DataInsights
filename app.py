@@ -12,7 +12,7 @@ from funciones import parse_contents
 # Instanciamos dash con paginas multiples y temas de bootstrap
 app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP], meta_tags=[
             {"name": "viewport", "content": "width=device-width, initial-scale=1"}
-            ])
+            ], suppress_callback_exceptions=True)
 
 
 SIDEBAR_STYLE = {
@@ -56,8 +56,7 @@ sidebar =html.Div(
 
 # Layout para todas las paginas
 app.layout = dbc.Container([
-    # dcc.Store(id='datitos')
-    dcc.Store(id='datitos', data=pd.read_csv("../iris.csv").to_dict('records')),
+    dcc.Store(id='main-data'),
     dbc.Row(
         [
             dbc.Col(
@@ -84,4 +83,4 @@ app.layout = dbc.Container([
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
