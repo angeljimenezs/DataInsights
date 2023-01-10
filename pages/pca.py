@@ -13,7 +13,7 @@ from funciones import *
 
 
 #app = Dash(__name__)
-dash.register_page(__name__, name='Análisis de Componentes Principales PCA', order=1)
+dash.register_page(__name__, name='PCA', order=2)
 
 
 layout = dbc.Container(children=[], id='pca-layout')
@@ -59,7 +59,7 @@ def desplegar_layout(df):
 
 def matriz_correlacion(df):
     return html.Div(children=[
-        html.H2("Matriz de Correlacion"),
+        html.H2("Matriz de Correlación"),
         dcc.Graph(figure = hacer_matriz_correlacion(df))
     ], 
     className='bg-succes'
@@ -79,13 +79,14 @@ def eigenvalores(df_eigenvalores):
 
 def varianza_acumulada(Varianza):
     return html.Div(children=[
-    html.H2("Varianza acumulada"),
+    html.H2("Varianza y selección de características"),
     dcc.Graph(figure=graficar_varianza(Varianza, np.cumsum(Varianza))),
+    html.H4('Número de variables'),
     dcc.Slider(0,len(Varianza), step=1,
             value=0,
             marks={str(num): str(num) for num in range(len(Varianza)+1)},
             id='varianza-slider'),
-    html.Div(id='slider-output', children=[]),
+    html.P(id='slider-output', className='fs-5', children=[]),
 ])
 
 @callback(
@@ -99,7 +100,7 @@ def update_variables(data, valor):
         dfNN = df.dropna()
         columnasObj = dfNN.select_dtypes(include=['object']).columns
         NuevaMatriz = dfNN.drop(columns=columnasObj)    # Se quitan las variables nominales
-        return "Componente: {}".format(NuevaMatriz.columns.to_list()[:valor])
+        return "Componentes importantes: {}".format(NuevaMatriz.columns.to_list()[:valor])
 
 
 """

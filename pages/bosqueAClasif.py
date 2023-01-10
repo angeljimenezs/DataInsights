@@ -13,7 +13,7 @@ from sklearn.metrics import accuracy_score
 
 from sklearn.ensemble import RandomForestClassifier
 
-dash.register_page(__name__, name='Bosque Aleatorio Clasificacion', order=3)
+dash.register_page(__name__, name='Bosque Aleatorio de Clasificacion', order=5)
 
 layout = dbc.Container(children=[], id='bac-layout')
 
@@ -63,16 +63,20 @@ def seleccion(MDatos):
     return html.Div(children=[
         html.H2("Seleccion de varible a predecir X"),
         dcc.RadioItems(columnasOpcion, id='var-selector-2'),
-        html.Button(id='submit-button-state-2', n_clicks=0, children='Entrenar', className='btn-primary'),
+        html.Button(id='submit-button-state-2', n_clicks=0, children='Entrenar', className='btn btn-info'),
         html.Div(),
-        dcc.Textarea(id='texto-2', readOnly=True, style={'width': '100%', 'height': 200}),
-        dcc.Clipboard(target_id="texto-2"),
+        #dcc.Textarea(id='texto-2', readOnly=True, style={'width': '100%', 'height': 200}),
+        #dcc.Clipboard(target_id="texto-2"),
+        html.Div([
+            dbc.Alert("¡Bosque Aleatorio de clasificación listo!", color='success')    
+        ], id='ready-alert-2', hidden=True)
+        
     ])
 
 def predictor_element(MDatos):
     return html.Div(
     html.Div(children=[
-            html.H4('Prediccion'),
+            html.H4('Predicción'),
             html.Div(id="resultado-pred-2"),
             html.Div([
                         dcc.Input(
@@ -83,7 +87,7 @@ def predictor_element(MDatos):
                             placeholder="Inserte valor {}".format(_),
                             ) for _ in range(len(MDatos.columns)-1)
                     ], id='predictor-div'),
-            html.Button(id='boton-predictor-2', n_clicks=0, children='Predecir', className='btn-primary')
+            html.Button(id='boton-predictor-2', n_clicks=0, children='Predecir', className='btn btn-info')
         ] 
     ), id='armani-2', hidden=True)
 
@@ -92,7 +96,7 @@ def predictor_element(MDatos):
 
 #### Callbacks ##################################
 @callback(
-    Output('texto-2','value'),
+    Output('ready-alert-2','hidden'),
     Output('armani-2', 'hidden'),
     Input('submit-button-state-2','n_clicks'),
     State('var-selector-2', 'value'),
@@ -123,7 +127,7 @@ def update_output(n_clicks, variable, data):
             #print(type(Reporte))
             
             #return Reporte[0], False
-            return "Clasificador listo", False
+            return False, False
     return dash.no_update, dash.no_update
 
 

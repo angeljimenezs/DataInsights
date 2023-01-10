@@ -6,8 +6,7 @@ import pandas as pd
 import numpy as np
 from funciones import *
 
-#app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
-dash.register_page(__name__, path='/', order=0)
+dash.register_page(__name__, name='EDA', order=1)
 #df = pd.read_csv("../iris.csv")
 
 layout = dbc.Container(children=[], id='eda-layout')
@@ -29,8 +28,6 @@ def desplegar_layout(df):
         descripcion_datos(df),
         datos_faltantes(df),
         valores_atipicos(df),
-
-
         html.H2("Paso 4: Identificación de relaciones entre pares variables"),
         html.H3("Matriz de correlación"),
         # Aqui va un heatmap de correlacion
@@ -42,10 +39,14 @@ def desplegar_layout(df):
 
 def descripcion_datos(df):
     return html.Div([
-    html.H2("Paso 1: Descripción de la estructura de los datos", className='bg-success rounded'),
-    html.H3("1) Forma (dimensiones) del DataFrame"),
-    html.P(str(df.shape)),
-    html.H3("2) Tipos de datos (variables)"),
+    html.H2("Paso 1: Descripción de la estructura de los datos"),
+    html.Ul([
+        html.H3("1) Forma del DataFrame"),
+        html.P("{}".format(str(df.shape)), className='fs-3'),
+        html.H3("2) Tipos de datos (variables)"),
+        generate_table(df.dtypes.to_frame().T)
+        ]),
+    
      ## Aqui deberia de haber uuna tabla con los tipos de datos
     #dash_table.DataTable(df.dtypes.to_frame().T.to_dict('records'), 
     #[{"name": i, "id": i} for i in df.columns]),
@@ -84,11 +85,6 @@ def valores_atipicos(df):
             df.columns,
             df.columns[0],
             id='boxplot-column-x'
-        ),
-        dcc.Dropdown(
-            df.columns,
-            df.columns[1],
-            id='boxplot-column-y'
         ),
         dcc.Graph(id='boxplot-graph')
     ]),

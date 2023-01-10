@@ -30,26 +30,19 @@ def generate_table(dataframe, max_rows=10):
     ], className='table-responsive')
 
 def graficar_varianza(varianza, varianza_acum):
-   
-    #layout = dict(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
     # Create traces
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=np.arange(len(varianza)), y=varianza, 
+    fig.add_trace(go.Scatter(x=np.arange(1, len(varianza)+1), y=varianza, 
         mode='lines+markers', name='varianza'))
-    fig.add_trace(go.Scatter(x=np.arange(len(varianza_acum)), y=varianza_acum, 
+    fig.add_trace(go.Scatter(x=np.arange(1, len(varianza_acum)+1), y=varianza_acum, 
         mode='lines+markers', name='varianza_acumulada'))
     
-    fig = formato_grafica(fig)
-    # # Cambiando el fondo
-    # fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
-    # # Cambiar el color del grid zero
-    # fig.update_xaxes(zeroline=True, zerolinewidth=2, zerolinecolor='Black')
-    # fig.update_yaxes(zeroline=True, zerolinewidth=2, zerolinecolor='Black')
+    fig.update_layout(
+        xaxis_title="No de variables", yaxis_title="Porcentaje de importancia"
+    )
 
-    # # Cambiar el color del grid
-    # fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='lightgray')
-    # fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='lightgray')
-    
+    fig = formato_grafica(fig)
+
     return fig
 
 #### Dar formato a grafica

@@ -12,7 +12,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.tree import export_text
 
 #app = Dash(__name__)
-dash.register_page(__name__, name='Arbol de decision pronostico', order=2)
+dash.register_page(__name__, name='Árbol de decisión de pronóstico', order=3)
 
 layout = dbc.Container(children=[], id='addp-layout')
 
@@ -53,15 +53,15 @@ def informacion_datos(df):
 
 def descripcion_datos(df):
     return html.Div(children=[
-        html.H2("Descripcion de los datos"),
+        html.H2("Descripción de los datos"),
         generate_table(df.describe().reset_index())
     ])
 
 def seleccion(MDatos):
     return html.Div(children=[
-        html.H2("Seleccion de varible a predecir X"),
+        html.H2("Selección de varible X a predecir"),
         dcc.RadioItems(MDatos.columns, id='var-selector'),
-        html.Button(id='submit-button-state', n_clicks=0, children='Entrenar', className='btn-primary'),
+        html.Button(id='submit-button-state', n_clicks=0, children='Entrenar', className='btn btn-info'),
         html.Div(),
         dcc.Textarea(id='texto', readOnly=True, style={'width': '100%', 'height': 200}),
         dcc.Clipboard(target_id="texto"),
@@ -70,7 +70,7 @@ def seleccion(MDatos):
 def predictor_element(MDatos):
     return html.Div(
     html.Div(children=[
-            html.H4('Prediccion'),
+            html.H4('Predicción'),
             html.Div(id="resultado-pred"),
             html.Div([
                         dcc.Input(
@@ -81,7 +81,7 @@ def predictor_element(MDatos):
                             placeholder="Inserte valor {}".format(_),
                             ) for _ in range(len(MDatos.columns)-1)
                     ], id='predictor-div'),
-            html.Button(id='boton-predictor', n_clicks=0, children='Predecir', className='btn-primary')
+            html.Button(id='boton-predictor', n_clicks=0, children='Predecir', className='btn btn-info')
         ] 
     ), id='armani', hidden=True)
 

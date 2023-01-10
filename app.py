@@ -2,13 +2,15 @@ import base64
 import datetime
 import io
 
+
 import dash 
 from dash import html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
+import pandas as pd
 from funciones import parse_contents
 
 # Instanciamos dash con paginas multiples y temas de bootstrap
-app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.SPACELAB], meta_tags=[
+app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP], meta_tags=[
             {"name": "viewport", "content": "width=device-width, initial-scale=1"}
             ])
 
@@ -54,7 +56,8 @@ sidebar =html.Div(
 
 # Layout para todas las paginas
 app.layout = dbc.Container([
-    dcc.Store(id='datitos'),
+    # dcc.Store(id='datitos')
+    dcc.Store(id='datitos', data=pd.read_csv("../iris.csv").to_dict('records')),
     dbc.Row(
         [
             dbc.Col(

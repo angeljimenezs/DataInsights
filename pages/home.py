@@ -7,6 +7,8 @@ import numpy as np
 from funciones import *
 
 
+dash.register_page(__name__, name ='Home', path='/', order=0)
+
 def dataframe_from_upload(contents, filename):
     content_type, content_string = contents.split(',')
 
@@ -44,12 +46,13 @@ upload_element = dcc.Upload(
 )
 
 
-dash.register_page(__name__)
-
 layout = html.Div([
-        upload_element,
-        html.Div(id='output-datatable'),
-        html.Div(id='uploading-output')
+    html.H1('¡Bienvenido a DataInsights!', className='display-4'),
+    html.P('DataInsights le permite poder analizar sus propios datos a tráves 5 distintos algoritmos.'),
+    html.H5('¡Empezemos! Por favor suba un archivo en formato csv.', className='text-center'),
+    upload_element,
+    html.Div(id='output-datatable'),
+    html.Div(id='uploading-output')
 ])
 
 @callback(
