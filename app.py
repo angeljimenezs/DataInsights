@@ -113,9 +113,9 @@ app.layout = dbc.Container([
                 [
                     sidebar
                 ],
-                #xs=4, sm=4, md=4, lg=2, xl=2, xxl=2
+                xs=4, sm=4, md=4, lg=2, xl=2, xxl=2, class_name='sticky-sidebar',
                 #class_name='col-3 px-1 bg-dark position-fixed" id="sticky-sidebar', 
-                class_name='col-3 sticky-sidebar',
+                #class_name='col-3 sticky-sidebar',
                 style={'position':'sticky'}
                 ),
 
@@ -123,8 +123,8 @@ app.layout = dbc.Container([
                 [
                     dash.page_container
                 ],
-                #xs=8, sm=8, md=8, lg=10, xl=10, xxl=10
-                class_name='col-9'
+                xs=8, sm=8, md=8, lg=10, xl=10, xxl=10
+                #class_name='col-9'
                 )
         ]
     )

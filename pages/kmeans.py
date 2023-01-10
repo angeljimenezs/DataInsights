@@ -13,7 +13,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import pairwise_distances_argmin_min
 from kneed import KneeLocator
 
-dash.register_page(__name__, name='Segmentación y Clasificación', order=3)
+dash.register_page(__name__, name='K-means', order=3)
 df = pd.read_csv("../iris.csv")
 
 #### a

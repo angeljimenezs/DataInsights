@@ -65,7 +65,7 @@ valores_atipicos =html.Div([
 ])
 
 layout = dbc.Container(children=[
-    html.H1(children='Analisis explotario de datos'),
+    html.H1(children=u'Análisis explotario de datos'),
     descripcion_datos,
     datos_faltantes,
     valores_atipicos,

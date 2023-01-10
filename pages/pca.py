@@ -71,7 +71,7 @@ varianza_acumulada = html.Div(children=[
 
 
 layout = html.Div(children=[
-    html.H1("Analisis de Componentes Principales PCA"),
+    html.H1("Análisis de Componentes Principales PCA"),
     matriz_correlacion,
     eigenvectores,
     eigenvalores,

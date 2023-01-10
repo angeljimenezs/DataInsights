@@ -71,7 +71,7 @@ predictor_element = html.Div(
 layout = html.Div(children=[
     dcc.Store(id='memory'),
 
-    html.H1(children='Arbol de decisión (Pronostico)'),
+    html.H1(children=u'Árbol de decisión (Pronóstico)'),
     informacion_datos,
     descripcion_datos,
     seleccion,
