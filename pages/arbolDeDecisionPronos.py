@@ -24,8 +24,9 @@ def comprobar_data(data):
     if data:
         df = pd.DataFrame(data)
         return desplegar_layout(df)
-        #return dash_table.DataTable(df.to_dict('records'), [{"name": i, "id": i} for i in df.columns])
-    return 'No hay datos'
+    return dbc.Container([
+            dbc.Alert("¡Suba un archivo válido en Home!", color="danger")])
+
 
 def desplegar_layout(df):
     columnasObj = df.select_dtypes(include=['object']).columns

@@ -27,8 +27,8 @@ def dataframe_from_upload(contents, filename):
 upload_element = dcc.Upload(
     id='upload-data',
     children=html.Div([
-        'Drag and Drop or ',
-        html.A('Select Files')
+        'Arrastre y suelte o ',
+        html.A('Seleccione archivo')
     ]),
     style={
     'width': '100%',
@@ -49,19 +49,38 @@ dash.register_page(__name__)
 layout = html.Div([
         upload_element,
         html.Div(id='output-datatable'),
+        html.Div(id='uploading-output')
 ])
 
 @callback(
     Output('datitos', 'data'),
     Input('upload-data', 'contents'),
     State('upload-data', 'filename'),
-    State('upload-data', 'last_modified')
 )
-def store_data(list_of_contents, list_of_names, list_of_dates):
+def store_data(list_of_contents, list_of_names):
     if list_of_contents is not None:
         dat = dataframe_from_upload(list_of_contents, list_of_names)
-        print(dat)
+        #print(type(dat))
         return dat
+
+@callback(
+    Output('uploading-output', 'children'),
+    Input('datitos', 'data'),
+    State('upload-data', 'filename'),
+    #State('upload-data', 'last_modified'),
+    #prevent_initial_call=True
+)
+def update_uploading_output(data, filename):
+    print(type(data))
+    print(filename)
+    if data is not None:
+        return html.Div([
+            dbc.Alert("¡Archivo subido!", color="success"),
+            html.H5(filename)])
+    
+
+
+
 
 
 """
